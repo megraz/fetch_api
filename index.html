@@ -19,7 +19,6 @@
         <input type="submit" id="submit-article">
     </form>
     <section id="articles">
-
     </section>
     <script>
         "use strict";
@@ -36,10 +35,15 @@
                     let article = document.createElement("article");
                     let h2 = document.createElement("h2");
                     let p = document.createElement("p");
+                    let button = document.createElement("button"); //creation d'un button
                     h2.textContent = o.title; //changer le contenu d'un article ac textcontent
                     p.textContent = o.content;
+                    button.textContent = "delete";
+                    button.dataset.title = o.title;
+                    button.addEventListener("click", deleteArticleListener);
                     article.appendChild(h2);
                     article.appendChild(p);
+                    article.appendChild(button);
                     section.appendChild(article);
                 }
             }).catch(function(error) {
@@ -47,6 +51,19 @@
             });
         }
         display(); //pr appeler la fonction et l'executer
+
+        function deleteArticleListener(e) {
+            let button = e.currentTarget;
+            console.log(button);
+            let url = "http://192.168.1.152:8080/article/marlene/" + button.dataset.title + "/";
+            fetch(url, {
+                method: "DELETE"
+            }).then(function(response) {
+                console.log(response.status);
+                display();
+            });
+        }
+
         let submit = document.querySelector("#submit-article");
         submit.addEventListener("click", function(e) {
             e.preventDefault();
